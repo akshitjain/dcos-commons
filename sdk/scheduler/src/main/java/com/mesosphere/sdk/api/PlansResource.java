@@ -203,6 +203,7 @@ public class PlansResource extends PrettyJsonResource {
                 return ELEMENT_NOT_FOUND_RESPONSE;
             }
             stepOptional.get().restart();
+            stepOptional.get().proceed();
         }
 
         return jsonOkResponse(getCommandResult("restart"));
