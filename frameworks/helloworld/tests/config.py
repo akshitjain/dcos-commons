@@ -1,7 +1,7 @@
 import sdk_marathon as marathon
 import sdk_tasks as tasks
 
-PACKAGE_NAME = 'hello-world'
+PACKAGE_NAME = 'helloworld'
 DEFAULT_TASK_COUNT = 3
 
 

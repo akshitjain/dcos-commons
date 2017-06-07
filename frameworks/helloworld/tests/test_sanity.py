@@ -97,7 +97,7 @@ def test_bump_hello_nodes():
 
 @pytest.mark.sanity
 def test_pods_list():
-    stdout = cmd.run_cli('hello-world pods list')
+    stdout = cmd.run_cli('helloworld pods list')
     jsonobj = json.loads(stdout)
     assert len(jsonobj) == configured_task_count()
     # expect: X instances of 'hello-#' followed by Y instances of 'world-#',
@@ -116,7 +116,7 @@ def test_pods_list():
 
 @pytest.mark.sanity
 def test_pods_status_all():
-    stdout = cmd.run_cli('hello-world pods status')
+    stdout = cmd.run_cli('helloworld pods status')
     jsonobj = json.loads(stdout)
     assert len(jsonobj) == configured_task_count()
     for k, v in jsonobj.items():
@@ -131,7 +131,7 @@ def test_pods_status_all():
 
 @pytest.mark.sanity
 def test_pods_status_one():
-    stdout = cmd.run_cli('hello-world pods status hello-0')
+    stdout = cmd.run_cli('helloworld pods status hello-0')
     jsonobj = json.loads(stdout)
     assert len(jsonobj) == 1
     task = jsonobj[0]
@@ -143,7 +143,7 @@ def test_pods_status_one():
 
 @pytest.mark.sanity
 def test_pods_info():
-    stdout = cmd.run_cli('hello-world pods info world-1')
+    stdout = cmd.run_cli('helloworld pods info world-1')
     jsonobj = json.loads(stdout)
     assert len(jsonobj) == 1
     task = jsonobj[0]
@@ -157,12 +157,12 @@ def test_pods_info():
 def test_state_properties_get():
     # 'suppressed' could be missing if the scheduler recently started, loop for a bit just in case:
     def check_for_nonempty_properties():
-        stdout = cmd.run_cli('hello-world state properties')
+        stdout = cmd.run_cli('helloworld state properties')
         return len(json.loads(stdout)) > 0
 
     shakedown.wait_for(lambda: check_for_nonempty_properties(), timeout_seconds=30)
 
-    stdout = cmd.run_cli('hello-world state properties')
+    stdout = cmd.run_cli('helloworld state properties')
     jsonobj = json.loads(stdout)
     assert len(jsonobj) == 6
     # alphabetical ordering:
@@ -173,7 +173,7 @@ def test_state_properties_get():
     assert jsonobj[4] == "world-0-server:task-status"
     assert jsonobj[5] == "world-1-server:task-status"
 
-    stdout = cmd.run_cli('hello-world state property suppressed')
+    stdout = cmd.run_cli('helloworld state property suppressed')
     assert stdout == "true\n"
 
 
@@ -184,7 +184,7 @@ def test_state_refresh_disable_cache():
     task_ids = tasks.get_task_ids(PACKAGE_NAME, '')
 
     # caching enabled by default:
-    stdout = cmd.run_cli('hello-world state refresh_cache')
+    stdout = cmd.run_cli('helloworld state refresh_cache')
     assert "Received cmd: refresh" in stdout
 
     config = marathon.get_config(PACKAGE_NAME)
@@ -197,7 +197,7 @@ def test_state_refresh_disable_cache():
     # caching disabled, refresh_cache should fail with a 409 error (eventually, once scheduler is up):
     def check_cache_refresh_fails_409conflict():
         try:
-            cmd.run_cli('hello-world state refresh_cache')
+            cmd.run_cli('helloworld state refresh_cache')
         except Exception as e:
             if "failed: 409 Conflict" in e.args[0]:
                 return True
@@ -215,7 +215,7 @@ def test_state_refresh_disable_cache():
 
     # caching reenabled, refresh_cache should succeed (eventually, once scheduler is up):
     def check_cache_refresh():
-        return cmd.run_cli('hello-world state refresh_cache')
+        return cmd.run_cli('helloworld state refresh_cache')
 
     stdout = shakedown.wait_for(lambda: check_cache_refresh(), timeout_seconds=120.)
     assert "Received cmd: refresh" in stdout
