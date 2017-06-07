@@ -192,10 +192,7 @@ public class DefaultRecoveryPlanManager extends ChainedObserver implements PlanM
         Collection<Protos.TaskInfo> failedTasks = StateStoreUtils.fetchTasksNeedingRecovery(stateStore, configStore);
         logger.info("Found tasks needing recovery: " + getTaskNames(failedTasks));
 
-        List<PodInstanceRequirement> failedPods = TaskUtils.getPodRequirements(
-                configStore,
-                failedTasks,
-                stateStore.fetchTasks());
+        List<PodInstanceRequirement> failedPods = TaskUtils.getPodRequirements(configStore, failedTasks);
         failedPods = failedPods.stream()
                 .filter(pod -> !PlanUtils.assetConflicts(pod, dirtyAssets))
                 .collect(Collectors.toList());
