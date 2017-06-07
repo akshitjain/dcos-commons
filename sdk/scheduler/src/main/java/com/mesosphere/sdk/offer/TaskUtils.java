@@ -339,12 +339,17 @@ public class TaskUtils {
             List<String> tasksToLaunch = new ArrayList<>();
             for (TaskSpec taskSpec : podInstance.getPod().getTasks()) {
                 String fullTaskName = TaskSpec.getInstanceName(podInstance, taskSpec.getName());
-                if (taskSpec.getGoal() == GoalState.RUNNING && failedTaskNames.contains(fullTaskName)) {
+                if (failedTaskNames.contains(fullTaskName)) {
                     tasksToLaunch.add(taskSpec.getName());
                 }
             }
 
-            podInstanceRequirements.add(PodInstanceRequirement.newBuilder(podInstance, tasksToLaunch).build());
+            if (tasksToLaunch.size() > 0) {
+                podInstanceRequirements.add(PodInstanceRequirement.newBuilder(podInstance, tasksToLaunch).build());
+            } else {
+                LOGGER.error(
+                        String.format("No tasks to launch in pod instance, with failed tasks %s", failedTaskNames));
+            }
         }
 
         return podInstanceRequirements;
