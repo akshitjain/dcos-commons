@@ -237,6 +237,8 @@ public class DefaultService implements Service {
             role = serviceSpec.getRole();
         }
 
+        LOGGER.info("Searching for roles in pods: {}", serviceSpec.getPods());
+
         roles.add(role);
         roles.addAll(
                 serviceSpec.getPods().stream()
