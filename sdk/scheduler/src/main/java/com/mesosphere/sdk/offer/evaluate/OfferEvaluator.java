@@ -171,8 +171,12 @@ public class OfferEvaluator {
         for (Protos.TaskInfo taskInfo : taskInfos) {
             Optional<Protos.TaskStatus> taskStatus = stateStore.fetchStatus(taskInfo.getName());
             if (taskStatus.isPresent() && taskStatus.get().getState().equals(Protos.TaskState.TASK_RUNNING)) {
-                logger.info("Using existing executor: {}", taskInfo.getExecutor().getExecutorId().getValue());
-                return Optional.of(taskInfo.getExecutor());
+                Protos.TaskState taskState = taskStatus.get().getState();
+                if (taskState.equals(Protos.TaskState.TASK_STAGING) ||
+                        taskState.equals(Protos.TaskState.TASK_RUNNING)) {
+                    logger.info("Using existing executor: {}", taskInfo.getExecutor().getExecutorId().getValue());
+                    return Optional.of(taskInfo.getExecutor());
+                }
             }
         }
 
