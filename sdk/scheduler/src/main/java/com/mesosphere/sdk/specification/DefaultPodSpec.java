@@ -52,6 +52,8 @@ public class DefaultPodSpec implements PodSpec {
     private Collection<VolumeSpec> volumes;
     @Valid
     private Collection<SecretSpec> secrets;
+    @Valid
+    private TransportEncryptionSpec transportEncryption;
 
     @JsonCreator
     public DefaultPodSpec(
@@ -65,7 +67,8 @@ public class DefaultPodSpec implements PodSpec {
             @JsonProperty("task-specs") List<TaskSpec> tasks,
             @JsonProperty("placement-rule") PlacementRule placementRule,
             @JsonProperty("volumes") Collection<VolumeSpec> volumes,
-            @JsonProperty("secrets") Collection<SecretSpec> secrets) {
+            @JsonProperty("secrets") Collection<SecretSpec> secrets,
+            @JsonProperty("transport-encryption") TransportEncryptionSpec transportEncryption) {
         this.type = type;
         this.user = user;
         this.count = count;
@@ -77,13 +80,14 @@ public class DefaultPodSpec implements PodSpec {
         this.placementRule = placementRule;
         this.volumes = (volumes != null) ? volumes : Collections.emptyList();
         this.secrets = (secrets != null) ? secrets : Collections.emptyList();
+        this.transportEncryption = transportEncryption;
     }
 
     private DefaultPodSpec(Builder builder) {
         this(builder.type, builder.user, builder.count,
              builder.image, builder.networks, builder.rlimits,
              builder.uris, builder.tasks, builder.placementRule,
-             builder.volumes, builder.secrets);
+             builder.volumes, builder.secrets, builder.transportEncryption);
         ValidationUtils.validate(this);
     }
 
@@ -105,6 +109,7 @@ public class DefaultPodSpec implements PodSpec {
         builder.placementRule = copy.getPlacementRule().isPresent() ? copy.getPlacementRule().get() : null;
         builder.volumes = copy.getVolumes();
         builder.secrets = copy.getSecrets();
+        builder.transportEncryption = copy.getTransportEncryption().isPresent() ? copy.getTransportEncryption().get() : null;
         return builder;
     }
 
@@ -164,6 +169,11 @@ public class DefaultPodSpec implements PodSpec {
     }
 
     @Override
+    public Optional<TransportEncryptionSpec> getTransportEncryption() {
+        return Optional.ofNullable(this.transportEncryption);
+    }
+
+    @Override
     public boolean equals(Object o) {
         return EqualsBuilder.reflectionEquals(this, o);
     }
@@ -191,6 +201,7 @@ public class DefaultPodSpec implements PodSpec {
         private PlacementRule placementRule;
         private Collection<VolumeSpec> volumes;
         private Collection<SecretSpec> secrets;
+        private TransportEncryptionSpec transportEncryption;
 
         private Builder(Optional<String> executorUri) {
             this.executorUri = executorUri;
@@ -348,6 +359,18 @@ public class DefaultPodSpec implements PodSpec {
          */
         public Builder secrets(Collection<SecretSpec> secrets) {
             this.secrets = secrets;
+            return this;
+        }
+
+        /**
+         * Sets the {@code transportEncryption} and returns a reference to this Builder so that the methods can be
+         * chained together.
+         *
+         * @param transportEncryption the {@code transportEncryption} to set
+         * @return a reference to this Builder
+         */
+        public Builder transportEncryption(TransportEncryptionSpec transportEncryption) {
+            this.transportEncryption = transportEncryption;
             return this;
         }
 

@@ -25,6 +25,7 @@ public class RawPod implements RawContainerInfoProvider {
     private final RawVolume volume;
     private final WriteOnceLinkedHashMap<String, RawVolume> volumes;
     private final WriteOnceLinkedHashMap<String, RawSecret> secrets;
+    private final RawTransportEncryption transportEncryption;
 
     private RawPod(
             @JsonProperty("resource-sets") WriteOnceLinkedHashMap<String, RawResourceSet> resourceSets,
@@ -39,7 +40,8 @@ public class RawPod implements RawContainerInfoProvider {
             @JsonProperty("user") String user,
             @JsonProperty("volume") RawVolume volume,
             @JsonProperty("volumes") WriteOnceLinkedHashMap<String, RawVolume> volumes,
-            @JsonProperty("secrets") WriteOnceLinkedHashMap<String, RawSecret> secrets) {
+            @JsonProperty("secrets") WriteOnceLinkedHashMap<String, RawSecret> secrets,
+            @JsonProperty("transport-encryption") RawTransportEncryption transportEncryption) {
         this.placement = placement;
         this.count = count;
         this.container = container;
@@ -53,7 +55,7 @@ public class RawPod implements RawContainerInfoProvider {
         this.volume = volume;
         this.volumes = volumes == null ? new WriteOnceLinkedHashMap<>() : volumes;
         this.secrets = secrets == null ? new WriteOnceLinkedHashMap<>() : secrets;
-
+        this.transportEncryption = transportEncryption;
     }
 
     public String getPlacement() {
@@ -108,4 +110,7 @@ public class RawPod implements RawContainerInfoProvider {
         return secrets;
     }
 
+    public RawTransportEncryption getTransportEncryption() {
+        return transportEncryption;
+    }
 }
