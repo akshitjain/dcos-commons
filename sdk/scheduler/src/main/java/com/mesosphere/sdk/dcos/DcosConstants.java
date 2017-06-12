@@ -13,6 +13,7 @@ public class DcosConstants {
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public static final String MESOS_MASTER_ZK_CONNECTION_STRING = MASTER_MESOS + ":2181";
     public static final String MESOS_MASTER_URI = "http://" + MASTER_MESOS;
+    public static final String SECRETS_BASE_URI = MESOS_MASTER_URI + "/secrets/v1/";
     public static final Boolean DEFAULT_GPU_POLICY = true;
     public static final String DEFAULT_OVERLAY_NETWORK = "dcos";
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings
