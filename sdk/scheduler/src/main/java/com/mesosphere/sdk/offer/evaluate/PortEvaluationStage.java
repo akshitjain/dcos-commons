@@ -99,13 +99,19 @@ public class PortEvaluationStage implements OfferEvaluationStage {
                 return evaluationOutcome;
             }
 
+            String passMsgFmt = "Offer contains sufficient '%s': for resource: '%s' with resourceId: '%s'";
+            if (resourceId.isPresent()) {
+                passMsgFmt = "Offer contains sufficient previously reserved '%s': " +
+                        "for resource: '%s' with resourceId: '%s'";
+            }
+
             resourceId = reserveEvaluationOutcome.getResourceId();
             setProtos(podInfoBuilder, ResourceBuilder.fromSpec(portSpec, resourceId).build());
             return EvaluationOutcome.pass(
                 this,
                 evaluationOutcome.getMesosResource().get(),
                 evaluationOutcome.getOfferRecommendations(),
-                "Offer contains sufficient '%s': for resource: '%s' with resourceId: '%s'",
+                passMsgFmt,
                 portSpec.getName(),
                 portSpec,
                 resourceId);
