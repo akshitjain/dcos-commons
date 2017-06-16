@@ -13,7 +13,7 @@ pods:
     tasks:
       prometheus-server:
         goal: RUNNING
-        cmd: "echo prometheus-server >> prometheus-container-path/output && sleep $SLEEP_DURATION"
+        cmd: "docker run prom/prometheus"
         cpus: {{NODE_CPUS}}
         memory: {{NODE_MEM}}
         volume:
