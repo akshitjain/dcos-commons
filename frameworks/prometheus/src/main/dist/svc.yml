@@ -11,9 +11,31 @@ pods:
       dcos:
     {{/ENABLE_VIRTUAL_NETWORK}}
     tasks:
-      node:
+      prometheus-server:
         goal: RUNNING
-        cmd: "echo prometheus >> prometheus-container-path/output && sleep $SLEEP_DURATION"
+        cmd: "echo prometheus-server >> prometheus-container-path/output && sleep $SLEEP_DURATION"
+        cpus: {{NODE_CPUS}}
+        memory: {{NODE_MEM}}
+        volume:
+          path: "prometheus-container-path"
+          type: {{NODE_DISK_TYPE}}
+          size: {{NODE_DISK}}
+        env:
+          SLEEP_DURATION: {{SLEEP_DURATION}}
+      metrics-exporter:
+        goal: RUNNING
+        cmd: "echo exporter >> prometheus-container-path/output && sleep $SLEEP_DURATION"
+        cpus: {{NODE_CPUS}}
+        memory: {{NODE_MEM}}
+        volume:
+          path: "prometheus-container-path"
+          type: {{NODE_DISK_TYPE}}
+          size: {{NODE_DISK}}
+        env:
+          SLEEP_DURATION: {{SLEEP_DURATION}}
+      grafana:
+        goal: RUNNING
+        cmd: "echo grafana >> prometheus-container-path/output && sleep $SLEEP_DURATION"
         cpus: {{NODE_CPUS}}
         memory: {{NODE_MEM}}
         volume:
