@@ -30,3 +30,6 @@ project(":frameworks/template").name = "template"
 include 'frameworks/cassandra'
 project(":frameworks/cassandra").name = "cassandra"
 
+
+include 'frameworks/prometheus'
+project(":frameworks/prometheus").name = "prometheus"
