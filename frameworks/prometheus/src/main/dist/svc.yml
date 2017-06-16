@@ -13,33 +13,22 @@ pods:
     tasks:
       prometheus-server:
         goal: RUNNING
-        cmd: "docker run prom/prometheus"
+        cmd: "docker run -p 9090:9090 prom/prometheus"
         cpus: {{NODE_CPUS}}
         memory: {{NODE_MEM}}
         volume:
-          path: "prometheus-container-path"
-          type: {{NODE_DISK_TYPE}}
-          size: {{NODE_DISK}}
-        env:
-          SLEEP_DURATION: {{SLEEP_DURATION}}
-      metrics-exporter:
-        goal: RUNNING
-        cmd: "echo exporter >> prometheus-container-path/output && sleep $SLEEP_DURATION"
-        cpus: {{NODE_CPUS}}
-        memory: {{NODE_MEM}}
-        volume:
-          path: "prometheus-container-path"
+          path: "prometheus-data"
           type: {{NODE_DISK_TYPE}}
           size: {{NODE_DISK}}
         env:
           SLEEP_DURATION: {{SLEEP_DURATION}}
       grafana:
         goal: RUNNING
-        cmd: "echo grafana >> prometheus-container-path/output && sleep $SLEEP_DURATION"
+        cmd: "docker run -p 3000:3000 grafana/grafana"
         cpus: {{NODE_CPUS}}
         memory: {{NODE_MEM}}
         volume:
-          path: "prometheus-container-path"
+          path: "grafana-container-path"
           type: {{NODE_DISK_TYPE}}
           size: {{NODE_DISK}}
         env:
